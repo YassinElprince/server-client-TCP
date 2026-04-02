@@ -94,3 +94,24 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *plaint
         send(sock, enc_buf, reply_len, 0);}
     close(sock);
     return NULL;}
+
+int main() {
+    int server_fd;
+    struct sockaddr_in address;
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+    bind(server_fd, (struct sockaddr *)&address, sizeof(address));
+    listen(server_fd, 10);
+    printf("Server listening on port 8080...\n");
+    while (1) {
+        int addrlen = sizeof(address);
+        int *new_socket = malloc(sizeof(int));
+        *new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+        pthread_t thread_id;
+        pthread_create(&thread_id, NULL, handle_client, (void *)new_socket);
+        pthread_detach(thread_id);}
+    return 0;}
