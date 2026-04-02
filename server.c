@@ -1,1 +1,10 @@
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <openssl/evp.h>
+#include <openssl/sha.h>
+#define PORT 8080
+#define BUFFER_SIZE 1024
